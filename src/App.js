@@ -9,12 +9,19 @@ import {
 } from "recharts";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Alert,
+} from "react-bootstrap";
 
 const API = axios.create({
   baseURL: "http://127.0.0.1:8000",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
 });
 
 function RecommendationApp() {
@@ -40,122 +47,155 @@ function RecommendationApp() {
   };
 
   return (
-    <div className="container py-5">
-      <h2 className="text-center text-primary mb-4">
-        AI Matchmaking Recommendations
-      </h2>
+    <div
+      style={{ backgroundColor: "#121212", minHeight: "100vh", width: "100vw" }}
+    >
+      <Container fluid className="py-5 px-0 mx-0 text-light">
+        <h1 className="text-center mb-4 text-primary">
+          AI Matchmaking Recommendations
+        </h1>
 
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card p-4 shadow-sm">
-            <label className="form-label">Member ID</label>
-            <input
-              type="text"
-              className="form-control mb-3"
-              placeholder="Enter Member ID"
-              value={memberId}
-              onChange={(e) => setMemberId(e.target.value)}
-            />
-            <button
-              className="btn btn-primary w-100"
-              onClick={fetchRecommendations}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Get Recommendations"}
-            </button>
-            {error && <div className="alert alert-danger mt-3">{error}</div>}
-          </div>
-        </div>
-      </div>
+        {/* Input Section */}
+        <Row className="justify-content-center">
+          <Col md={6}>
+            <Card className="p-4 bg-dark text-light border border-primary">
+              <Form.Group className="mb-3">
+                <Form.Label>Member ID</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Member ID"
+                  value={memberId}
+                  onChange={(e) => setMemberId(e.target.value)}
+                />
+              </Form.Group>
+              <Button
+                variant="primary"
+                className="w-100"
+                onClick={fetchRecommendations}
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Get Recommendations"}
+              </Button>
+              {error && (
+                <Alert variant="danger" className="mt-3">
+                  {error}
+                </Alert>
+              )}
+            </Card>
+          </Col>
+        </Row>
 
-      {data && (
-        <>
-          <div className="card mt-4 p-4 shadow-sm">
-            <h4 className="text-primary">User Details</h4>
-            <p>
-              <strong>Member ID:</strong> {data.user_details.Member_ID}
-            </p>
-            <p>
-              <strong>Gender:</strong> {data.user_details.Gender}
-            </p>
-            <p>
-              <strong>Age:</strong> {data.user_details.Age}
-            </p>
-            <p>
-              <strong>Marital Status:</strong>{" "}
-              {data.user_details.Marital_Status}
-            </p>
-            <p>
-              <strong>Sect:</strong> {data.user_details.Sect}
-            </p>
-            <p>
-              <strong>Caste:</strong> {data.user_details.Caste}
-            </p>
-            <p>
-              <strong>State:</strong> {data.user_details.State}
-            </p>
-          </div>
+        {/* User Details */}
+        {data && (
+          <>
+            <Card className="p-4 mt-4 bg-secondary text-light">
+              <h3 className="text-warning">User Details</h3>
+              <p>
+                <strong>Member ID:</strong> {data.user_details.Member_ID}
+              </p>
+              <p>
+                <strong>Gender:</strong> {data.user_details.Gender}
+              </p>
+              <p>
+                <strong>Age:</strong> {data.user_details.Age}
+              </p>
+              <p>
+                <strong>Marital Status:</strong>{" "}
+                {data.user_details.Marital_Status}
+              </p>
+              <p>
+                <strong>Sect:</strong> {data.user_details.Sect}
+              </p>
+              <p>
+                <strong>Caste:</strong> {data.user_details.Caste}
+              </p>
+              <p>
+                <strong>State:</strong> {data.user_details.State}
+              </p>
+            </Card>
 
-          <div className="row mt-4">
-            {/* Age Distribution */}
-            <div className="col-md-4">
-              <div className="card p-4 shadow-sm">
-                <h5 className="text-primary">Age Distribution</h5>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    data={Object.entries(data.statistics.age_distribution).map(
-                      ([key, value]) => ({ age: key, count: value })
-                    )}
-                  >
-                    <XAxis dataKey="age" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#6366F1" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+            {/* Charts Section */}
+            <Row className="mt-4">
+              {/* Two charts side by side */}
+              <Col md={6} className="mb-4">
+                <Card className="p-3 bg-dark text-light border border-primary">
+                  <h4 className="text-primary">Age Distribution</h4>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart
+                      data={Object.entries(
+                        data.statistics.age_distribution
+                      ).map(([key, value]) => ({ age: key, count: value }))}
+                    >
+                      <XAxis dataKey="age" stroke="#ffffff" />
+                      <YAxis stroke="#ffffff" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#ffffff",
+                          color: "#000000",
+                          border: "1px solid #ddd",
+                          borderRadius: "5px",
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#6366F1" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Card>
+              </Col>
 
-            {/* Sect Distribution */}
-            <div className="col-md-4">
-              <div className="card p-4 shadow-sm">
-                <h5 className="text-primary">Sect Distribution</h5>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    data={Object.entries(data.statistics.sect_distribution).map(
-                      ([key, value]) => ({ sect: key, count: value })
-                    )}
-                  >
-                    <XAxis dataKey="sect" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#3B82F6" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+              <Col md={6} className="mb-4">
+                <Card className="p-3 bg-dark text-light border border-success">
+                  <h4 className="text-success">Sect Distribution</h4>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart
+                      data={Object.entries(
+                        data.statistics.sect_distribution
+                      ).map(([key, value]) => ({ sect: key, count: value }))}
+                    >
+                      <XAxis dataKey="sect" stroke="#ffffff" />
+                      <YAxis stroke="#ffffff" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#ffffff",
+                          color: "#000000",
+                          border: "1px solid #ddd",
+                          borderRadius: "5px",
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#3B82F6" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Card>
+              </Col>
 
-            {/* State Distribution */}
-            <div className="col-md-4">
-              <div className="card p-4 shadow-sm">
-                <h5 className="text-primary">State Distribution</h5>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    data={Object.entries(
-                      data.statistics.state_distribution
-                    ).map(([key, value]) => ({ state: key, count: value }))}
-                  >
-                    <XAxis dataKey="state" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#A78BFA" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+              {/* Full-width State Distribution */}
+              <Col md={12} className="mb-4">
+                <Card className="p-3 bg-dark text-light border border-warning">
+                  <h4 className="text-warning">State Distribution</h4>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart
+                      data={Object.entries(
+                        data.statistics.state_distribution
+                      ).map(([key, value]) => ({ state: key, count: value }))}
+                    >
+                      <XAxis dataKey="state" stroke="#ffffff" />
+                      <YAxis stroke="#ffffff" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#ffffff",
+                          color: "#000000",
+                          border: "1px solid #ddd",
+                          borderRadius: "5px",
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#A78BFA" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Card>
+              </Col>
+            </Row>
+          </>
+        )}
+      </Container>
     </div>
   );
 }
