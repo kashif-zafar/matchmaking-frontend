@@ -88,8 +88,15 @@ function RecommendationApp() {
         {/* User Details */}
         {data && (
           <>
-            <Card className="p-4 mt-4 bg-secondary text-light">
-              <h3 className="text-warning">User Details</h3>
+            <Card
+              className="p-4 mt-4"
+              style={{
+                backgroundColor: "#2C2F33",
+                color: "#E0E0E0",
+                border: "1px solid #FFD700",
+              }}
+            >
+              <h3 style={{ color: "#FFD700" }}>User Details</h3>
               <p>
                 <strong>Member ID:</strong> {data.user_details.Member_ID}
               </p>
@@ -116,7 +123,7 @@ function RecommendationApp() {
 
             {/* Charts Section */}
             <Row className="mt-4">
-              {/* Two charts side by side */}
+              {/* Row 1: Age & Caste Distribution */}
               <Col md={6} className="mb-4">
                 <Card className="p-3 bg-dark text-light border border-primary">
                   <h4 className="text-primary">Age Distribution</h4>
@@ -143,6 +150,57 @@ function RecommendationApp() {
               </Col>
 
               <Col md={6} className="mb-4">
+                <Card className="p-3 bg-dark text-light border border-info">
+                  <h4 className="text-info">Caste Distribution</h4>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart
+                      data={Object.entries(
+                        data.statistics.caste_distribution
+                      ).map(([key, value]) => ({ caste: key, count: value }))}
+                    >
+                      <XAxis dataKey="caste" stroke="#ffffff" />
+                      <YAxis stroke="#ffffff" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#ffffff",
+                          color: "#000000",
+                          border: "1px solid #ddd",
+                          borderRadius: "5px",
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#22D3EE" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Card>
+              </Col>
+
+              {/* Row 2: State & Sect Distribution (both 50%) */}
+              <Col md={6} className="mb-4">
+                <Card className="p-3 bg-dark text-light border border-warning">
+                  <h4 className="text-warning">State Distribution</h4>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart
+                      data={Object.entries(
+                        data.statistics.state_distribution
+                      ).map(([key, value]) => ({ state: key, count: value }))}
+                    >
+                      <XAxis dataKey="state" stroke="#ffffff" />
+                      <YAxis stroke="#ffffff" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#ffffff",
+                          color: "#000000",
+                          border: "1px solid #ddd",
+                          borderRadius: "5px",
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#A78BFA" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Card>
+              </Col>
+
+              <Col md={6} className="mb-4">
                 <Card className="p-3 bg-dark text-light border border-success">
                   <h4 className="text-success">Sect Distribution</h4>
                   <ResponsiveContainer width="100%" height={250}>
@@ -162,32 +220,6 @@ function RecommendationApp() {
                         }}
                       />
                       <Bar dataKey="count" fill="#3B82F6" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </Card>
-              </Col>
-
-              {/* Full-width State Distribution */}
-              <Col md={12} className="mb-4">
-                <Card className="p-3 bg-dark text-light border border-warning">
-                  <h4 className="text-warning">State Distribution</h4>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart
-                      data={Object.entries(
-                        data.statistics.state_distribution
-                      ).map(([key, value]) => ({ state: key, count: value }))}
-                    >
-                      <XAxis dataKey="state" stroke="#ffffff" />
-                      <YAxis stroke="#ffffff" />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#ffffff",
-                          color: "#000000",
-                          border: "1px solid #ddd",
-                          borderRadius: "5px",
-                        }}
-                      />
-                      <Bar dataKey="count" fill="#A78BFA" />
                     </BarChart>
                   </ResponsiveContainer>
                 </Card>
